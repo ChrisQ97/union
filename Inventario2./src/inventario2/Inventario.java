@@ -1,0 +1,777 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package inventario2;
+
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
+/**
+ *
+ * @author sys515
+ */
+
+public class Inventario extends javax.swing.JFrame {
+
+    Ingreso ss = new Ingreso();
+    Conexion con = new Conexion();
+    Connection cn = con.conexion();
+    Connection tr = con.conexion();
+    Connection Consulta = con.conexion();
+    JTextField Codigo=new JTextField(12);
+    JTextField Nombre=new JTextField(12);
+    JTextField Marca=new JTextField(12);
+    JTextField Stock_Minimo=new JTextField(12);
+DefaultTableModel modeloBusqueda = new DefaultTableModel() {
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return false;
+                }
+            };
+    
+       
+       
+       
+    /**
+     * Creates new form Inventario
+     */
+    
+    public Inventario() {
+        
+        
+        initComponents();
+       
+        this.setDefaultCloseOperation(this.HIDE_ON_CLOSE);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();    
+        this.setLocation(dim.width/4-this.getSize().width/4, dim.height/10-this.getSize().height/10);
+        this.setTitle("Inventario De La 'Empresa' - Sistema Inventario BTZ");
+        
+        this.setResizable(false);
+//pruebas
+        //this.setUndecorated(true);
+        this.setSize(1060,605);
+        
+        //this.setDefaultCloseOperation(this.HIDE_ON_CLOSE);
+        //
+        
+       // this.setSize(475, 500);
+         
+        try {
+
+            
+            modeloBusqueda.addColumn("Codigo");
+            modeloBusqueda.addColumn("Nombre");
+            modeloBusqueda.addColumn("Marca");
+            modeloBusqueda.addColumn("Unidad");
+            modeloBusqueda.addColumn("Existencia");
+            modeloBusqueda.addColumn("Stock Minimo");
+            Inventario.setModel(modeloBusqueda);
+
+            String datos[] = new String[6];
+            int contar = 0;
+            Statement sx = Consulta.createStatement();
+            ResultSet Ca = sx.executeQuery("SELECT Codigo,Nombre,Marca,Medida,Existencia,StockMinimo FROM Producto");
+            while (Ca.next()) {
+                datos[0]=Ca.getString(1);
+                datos[1] = Ca.getString(2);
+                datos[2] = Ca.getString(3);
+                datos[3] = Ca.getString(4);
+                datos[4] = Ca.getString(5);
+                datos[5] = Ca.getString(6);
+                modeloBusqueda.addRow(datos);
+                contar++;
+            }
+            Inventario.setModel(modeloBusqueda);
+            if (contar == 0) {
+                JOptionPane.showMessageDialog(null, "No hay Productos en la base de datos");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         Inventario.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent Mouse_evt) {
+                //try{
+                JTable table = (JTable) Mouse_evt.getSource();
+                Point point = Mouse_evt.getPoint();
+                int row = table.rowAtPoint(point);
+                if (Mouse_evt.getClickCount() == 2) {
+                    
+                    String x = String.valueOf(Inventario.getValueAt(Inventario.getSelectedRow(), 2));
+                    String xr = String.valueOf(Inventario.getValueAt(Inventario.getSelectedRow(), 1));
+                   
+                    MostrarLotes ere=new MostrarLotes(x,xr);
+                    ere.setVisible(true);
+                 
+                }
+                 /*catch()
+                         {
+                 
+                 }*/
+            }
+        });
+          FormatoTabla ft = new FormatoTabla(0);
+        Inventario.setDefaultRenderer (Object.class, ft );
+        Todo.setSelected(true);
+      LLenar.setVisible(false);
+        
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        Menu = new javax.swing.JPopupMenu();
+        Editar = new javax.swing.JMenuItem();
+        Panel = new javax.swing.JPanel();
+        Act = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        Inventario = new rojerusan.RSTableMetro();
+        P2 = new javax.swing.JRadioButton();
+        Todo = new javax.swing.JRadioButton();
+        Generar = new javax.swing.JButton();
+        LLenar = new rojerusan.RSComboMetro();
+        jLabel5 = new javax.swing.JLabel();
+
+        Editar.setText("Editar");
+        Editar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditarActionPerformed(evt);
+            }
+        });
+        Menu.add(Editar);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setSize(new java.awt.Dimension(1040, 602));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+
+        Panel.setBackground(new java.awt.Color(17, 111, 172));
+        Panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        Act.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconoso/icons8-actualizar-50.png"))); // NOI18N
+        Act.setBorderPainted(false);
+        Act.setContentAreaFilled(false);
+        Act.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/iconoso/icons8-actualizar-filled-50.png"))); // NOI18N
+        Act.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ActActionPerformed(evt);
+            }
+        });
+        Panel.add(Act, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 510, 40, 42));
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconoso/icons8-producto-50.png"))); // NOI18N
+        jButton1.setContentAreaFilled(false);
+        jButton1.setDefaultCapable(false);
+        jButton1.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/iconoso/icons8-producto-filled-50.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        Panel.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 510, 51, 50));
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconoso/icons8-volver-asignación-50.png"))); // NOI18N
+        jButton2.setBorderPainted(false);
+        jButton2.setContentAreaFilled(false);
+        jButton2.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/iconoso/icons8-volver-asignación-filled-50.png"))); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        Panel.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 500, 49, -1));
+
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("INVENTARIO");
+        Panel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 20, 200, 44));
+
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Agregar producto");
+        Panel.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 480, -1, -1));
+
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Regresar");
+        Panel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 480, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Generar Reporte");
+        Panel.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 80, -1, -1));
+
+        Inventario.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        Inventario.setColorBackgoundHead(new java.awt.Color(0, 141, 232));
+        Inventario.setComponentPopupMenu(Menu);
+        Inventario.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        Inventario.setFuenteFilas(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        Inventario.setFuenteFilasSelect(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        Inventario.setFuenteHead(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jScrollPane2.setViewportView(Inventario);
+
+        Panel.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 1030, 320));
+
+        P2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        P2.setForeground(new java.awt.Color(255, 255, 255));
+        P2.setText("Producto");
+        P2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                P2ActionPerformed(evt);
+            }
+        });
+        Panel.add(P2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 80, -1, -1));
+
+        Todo.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        Todo.setForeground(new java.awt.Color(255, 255, 255));
+        Todo.setText("Todo");
+        Todo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TodoActionPerformed(evt);
+            }
+        });
+        Panel.add(Todo, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, -1, -1));
+
+        Generar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconoso/icons8-multiedición-50.png"))); // NOI18N
+        Generar.setBorderPainted(false);
+        Generar.setContentAreaFilled(false);
+        Generar.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/iconoso/icons8-multiedición-filled-50.png"))); // NOI18N
+        Generar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GenerarActionPerformed(evt);
+            }
+        });
+        Panel.add(Generar, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 60, -1, -1));
+
+        LLenar.setColorArrow(new java.awt.Color(17, 111, 172));
+        LLenar.setColorBorde(new java.awt.Color(17, 111, 172));
+        LLenar.setColorFondo(new java.awt.Color(17, 111, 172));
+        LLenar.setFocusCycleRoot(true);
+        LLenar.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        LLenar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LLenarActionPerformed(evt);
+            }
+        });
+        Panel.add(LLenar, new org.netbeans.lib.awtextra.AbsoluteConstraints(406, 76, -1, -1));
+
+        jLabel5.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Actualizar");
+        Panel.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 480, -1, -1));
+
+        getContentPane().add(Panel, java.awt.BorderLayout.CENTER);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void ActActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActActionPerformed
+        actua();
+    }//GEN-LAST:event_ActActionPerformed
+    private void actua()
+    {
+                try {
+
+            DefaultTableModel modeloBusqueda = new DefaultTableModel() {
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return false;
+                }
+            };
+            modeloBusqueda.addColumn("Codigo");
+            modeloBusqueda.addColumn("Nombre");
+            modeloBusqueda.addColumn("Marca");
+            modeloBusqueda.addColumn("Unidad");
+            
+            modeloBusqueda.addColumn("Existencia");
+            modeloBusqueda.addColumn("Stock Minimo");
+            Inventario.setModel(modeloBusqueda);
+
+            String datos[] = new String[6];
+            int contar = 0;
+            Statement sx = Consulta.createStatement();
+            ResultSet Ca = sx.executeQuery("SELECT Codigo,Nombre,Marca,Medida,Existencia,StockMinimo FROM Producto");
+            while (Ca.next()) {
+                datos[0]=Ca.getString(1);
+                datos[1] = Ca.getString(2);
+                datos[2] = Ca.getString(3);
+                datos[3] = Ca.getString(4);
+                datos[4] = Ca.getString(5);
+                datos[5] = Ca.getString(6);
+                modeloBusqueda.addRow(datos);
+                contar++;
+            }
+            Inventario.setModel(modeloBusqueda);
+            if (contar == 0) {
+                JOptionPane.showMessageDialog(null, "No hay Productos en la base de datos");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+    }
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ss.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Menu men=new Menu();
+        men.setVisible(true);
+        dispose();  
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        Menu men=new Menu();
+        men.setVisible(true);
+        dispose(); // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosing
+
+    
+    private Boolean Autorizar()
+    {
+        return true;
+    }
+    private void encontrarid(String x[],String y[])
+    {
+        if(x[0].equals(y[0]))
+        {   String id="";
+            try 
+            {
+                Statement sx = Consulta.createStatement();
+                ResultSet Ca = sx.executeQuery("SELECT id FROM Producto where Codigo='"+y[0]+"'");
+                while(Ca.next())
+                {
+                    id=Ca.getString(1);
+                }
+                
+            } 
+            catch (SQLException ex)
+            {
+                Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            pre_validarNM(id,x,y);
+        }
+        else
+        {
+            String id="";
+            try 
+            {
+                Statement sx = Consulta.createStatement();
+                ResultSet Ca = sx.executeQuery("SELECT id FROM Producto where Codigo='"+y[0]+"'");
+                while(Ca.next())
+                {
+                    id=Ca.getString(1);
+                }
+                
+            } 
+            catch (SQLException ex)
+            {
+                Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            validarCodigo(id,x,y);
+        }
+        
+    }
+    private void modificar(String id,String x[],String y[])
+    {
+        try {
+            PreparedStatement ActualizarProveedor = cn.prepareStatement("UPDATE Producto set Codigo='"+x[0]+"'where id='"+id+"'");
+            ActualizarProveedor.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void modificarNM(String id,String x[],String y[])
+    {
+        try {
+            PreparedStatement ActualizarProveedor = cn.prepareStatement("UPDATE Producto set Nombre='"+x[1]+"', Marca='"+x[2]+"'where id='"+id+"'");
+            ActualizarProveedor.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void pre_validarNM(String id,String x[],String y[])
+    {
+        if(x[1].equals(y[1])&&x[2].equals(y[2]))
+        {
+            
+        }
+        else
+        {
+                int c=0;
+        try {
+            Statement sx = Consulta.createStatement();
+            ResultSet Ca = sx.executeQuery("SELECT id FROM Producto where Nombre='"+x[1]+"' && Marca='"+x[2]+"'");
+            while(Ca.next())
+            {
+                c++;
+            }
+            if(c==0)
+            {
+                    
+                modificarNM(id,x,y);
+            }
+            else
+            {
+                javax.swing.JOptionPane.showMessageDialog(null, "Este Nombre y Marca ya existe");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
+    }
+    private void validarCodigo(String id,String x[],String y[])
+    {
+        int c=0;
+        try {
+            Statement sx = Consulta.createStatement();
+            ResultSet Ca = sx.executeQuery("SELECT id FROM Producto where Codigo="+x[0]+"");
+            while(Ca.next())
+            {
+                c++;
+            }
+            if(c==0)
+            {
+                modificar(id,x,y);
+                pre_validarNM(id,x,y);
+                
+                
+            }
+            else
+            {
+                javax.swing.JOptionPane.showMessageDialog(null, "Codigo Invalido, ya se esta usando");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+  
+    private void actualizar(int celda)
+    {
+       String[] datos=new String[4];
+       String[] datos2=new String[4];
+       Stock_Minimo.addKeyListener(new KeyListener(){
+           @Override
+           public void keyTyped(java.awt.event.KeyEvent evt) {
+                int k = (int) evt.getKeyChar();
+                if (k >= 97 && k <= 127 || k >= 58 && k <= 97) {
+                evt.setKeyChar((char) KeyEvent.VK_CLEAR);
+                JOptionPane.showMessageDialog(null, "No puede ingresar letras!!!", "Ventana Error Datos", JOptionPane.ERROR_MESSAGE);
+            }
+            if (k == 241 || k == 209) {
+            evt.setKeyChar((char) KeyEvent.VK_CLEAR);
+            JOptionPane.showMessageDialog(null, "No puede ingresar letras!!!", "Ventana Error Datos", JOptionPane.ERROR_MESSAGE);
+        }
+        if (k >= 33 && k <= 47) {
+            evt.setKeyChar((char) KeyEvent.VK_CLEAR);
+            JOptionPane.showMessageDialog(null, "No puede ingresar Simbolos!!!", "Ventana Error Datos", JOptionPane.ERROR_MESSAGE);
+        }
+        if (k == 10) {
+            Stock_Minimo.transferFocus();
+        }
+//               throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+           }
+
+           @Override
+           public void keyPressed(KeyEvent e) {
+               //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+           }
+
+           @Override
+           public void keyReleased(KeyEvent e) {
+               //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+           }
+
+         
+       });
+       JPanel panel = new JPanel();
+       Codigo.setText(String.valueOf(Inventario.getValueAt(Inventario.getSelectedRow(), 0)));
+       Nombre.setText(String.valueOf(Inventario.getValueAt(Inventario.getSelectedRow(), 1)));   
+       Marca.setText(String.valueOf(Inventario.getValueAt(Inventario.getSelectedRow(), 2)));
+       Stock_Minimo.setText(String.valueOf(Inventario.getValueAt(Inventario.getSelectedRow(), 4)));
+       datos2[0]=Codigo.getText();
+       datos2[1]=Nombre.getText();
+       datos2[2]=Marca.getText();
+       datos2[3]=Stock_Minimo.getText();
+       panel.add(new JLabel("Codigo:"));
+       
+       panel.add(Codigo);
+       panel.add(new JLabel("Nombre:"));
+       panel.add(Nombre);
+       panel.add(new JLabel("Marca:"));
+       panel.add(Marca);
+       panel.add(new JLabel("Stock Minimo:"));
+       panel.add(Stock_Minimo);
+       
+       int seleccionar2=JOptionPane.showConfirmDialog(Inventario, panel);
+       if(seleccionar2==0)
+       {
+            
+           datos[0]=Codigo.getText();
+           datos[1]=Nombre.getText();
+           datos[2]=Marca.getText();
+           datos[3]=Stock_Minimo.getText();
+           encontrarid(datos,datos2);
+       }
+       if(seleccionar2==1||seleccionar2==2)
+       {
+           
+       }
+       
+    }
+                                      
+    
+    private void EditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditarActionPerformed
+       
+        int seleccionar=0;
+        seleccionar=Inventario.getSelectedRow();
+        if(seleccionar==-1)
+        {
+            JOptionPane.showMessageDialog(null, "Seleccione un fila valida");
+        }
+        else
+        {
+           if(Autorizar()==true)
+           {
+               actualizar(seleccionar);
+               actua();
+           }
+           else
+           {
+            JOptionPane.showMessageDialog(null, "Acceso Denegado");
+ 
+           }
+        }
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_EditarActionPerformed
+
+    private void TodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TodoActionPerformed
+
+        if(Todo.isSelected()==true)
+        {
+            P2.setSelected(false);
+        llena();
+        LLenar.setVisible(false);
+        }
+        else
+        {
+            P2.setSelected(true);
+             LLenar.removeAllItems();
+
+        prod();
+        LLenar.setVisible(true);
+        
+        Todo.setSelected(false);
+        }
+        
+
+    }//GEN-LAST:event_TodoActionPerformed
+
+    private void llena()
+    {
+                modeloBusqueda.setRowCount(0);
+
+         try {
+
+            
+           
+            String datos[] = new String[6];
+            Statement sx = Consulta.createStatement();
+            ResultSet Ca = sx.executeQuery("SELECT Codigo,Nombre,Marca,Medida,Existencia,StockMinimo FROM Producto");
+            while (Ca.next()) {
+                datos[0]=Ca.getString(1);
+                datos[1] = Ca.getString(2);
+                datos[2] = Ca.getString(3);
+                datos[3] = Ca.getString(4);
+                datos[4] = Ca.getString(5);
+                datos[5] = Ca.getString(6);
+                modeloBusqueda.addRow(datos);
+            }
+            Inventario.setModel(modeloBusqueda);
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void GenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerarActionPerformed
+     
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_GenerarActionPerformed
+
+    private void P2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_P2ActionPerformed
+          if(P2.isSelected()==true) 
+          {
+                  LLenar.removeAllItems();
+
+        prod();
+        LLenar.setVisible(true);
+        
+        Todo.setSelected(false);
+          }
+          else
+          {
+              Todo.setSelected(true);
+              
+        P2.setSelected(false);
+        llena();
+        LLenar.setVisible(false);
+          }
+    }//GEN-LAST:event_P2ActionPerformed
+
+    private void LLenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LLenarActionPerformed
+String Completo = (String) LLenar.getSelectedItem();
+        llenarBus(Completo);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_LLenarActionPerformed
+    private void llenarBus(String Cod)
+    {
+               modeloBusqueda.setRowCount(0);
+
+         try {
+
+            
+            
+
+            String datos[] = new String[6];
+            Statement sx = Consulta.createStatement();
+            ResultSet Ca = sx.executeQuery("SELECT Codigo,Nombre,Marca,Medida,Existencia,StockMinimo FROM Producto where Codigo='"+Cod+"'");
+            while (Ca.next()) {
+                datos[0]=Ca.getString(1);
+                datos[1] = Ca.getString(2);
+                datos[2] = Ca.getString(3);
+                datos[3] = Ca.getString(4);
+                datos[4] = Ca.getString(5);
+                datos[5] = Ca.getString(6);
+                modeloBusqueda.addRow(datos);
+            }
+            Inventario.setModel(modeloBusqueda);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    private void prod()    
+    {
+        AutoCompleteDecorator.decorate(LLenar);
+
+        try {
+            Statement sx = Consulta.createStatement();
+            ResultSet Ca = sx.executeQuery("SELECT Codigo FROM Producto");
+            while (Ca.next()) {
+
+                    LLenar.addItem(Ca.getString(1));
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                
+    }
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Inventario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Inventario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Inventario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Inventario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                
+                new Inventario().setVisible(true);
+            }
+            
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Act;
+    private javax.swing.JMenuItem Editar;
+    private javax.swing.JButton Generar;
+    private rojerusan.RSTableMetro Inventario;
+    private rojerusan.RSComboMetro LLenar;
+    private javax.swing.JPopupMenu Menu;
+    private javax.swing.JRadioButton P2;
+    private javax.swing.JPanel Panel;
+    private javax.swing.JRadioButton Todo;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JScrollPane jScrollPane2;
+    // End of variables declaration//GEN-END:variables
+}
